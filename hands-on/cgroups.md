@@ -1,89 +1,92 @@
 # Cgroups
 
-Create a "red" control group, making all the tunables of the `memory`,`cpu`,
-`cpuset` controllers writable by nanastop
+1. Create two control groups, a "red" and a "blue", making all the tunables of the 
+`cpu`,`cpuset` controllers writable by nanastop
 
 ```
 sudo cgcreate -a nanastop -g cpu,cpuset:red
 sudo cgcreate -a nanastop -g cpu,cpuset:blue
 ```
 
+Inspect the tunables:
+
 ```
 ls -l /sys/fs/cgroup/cpu/red
-[nanastop@nanastop-vm:~ ->0]$ ls -l /sys/fs/cgroup/cpu/red
-total 0
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cgroup.clone_children
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cgroup.procs
--r--r--r-- 1 nanastop root 0 Feb 22 11:40 cpuacct.stat
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuacct.usage
--r--r--r-- 1 nanastop root 0 Feb 22 11:40 cpuacct.usage_percpu
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpu.cfs_period_us
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpu.cfs_quota_us
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpu.shares
--r--r--r-- 1 nanastop root 0 Feb 22 11:40 cpu.stat
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 notify_on_release
--rw-r--r-- 1 root     root 0 Feb 22 11:40 tasks
-[nanastop@nanastop-vm:~ ->0]$ ls -l /sys/fs/cgroup/cpuset/red
-total 0
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cgroup.clone_children
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cgroup.procs
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.cpu_exclusive
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.cpus
--r--r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.effective_cpus
--r--r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.effective_mems
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.mem_exclusive
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.mem_hardwall
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.memory_migrate
--r--r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.memory_pressure
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.memory_spread_page
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.memory_spread_slab
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.mems
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.sched_load_balance
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 cpuset.sched_relax_domain_level
--rw-r--r-- 1 nanastop root 0 Feb 22 11:40 notify_on_release
--rw-r--r-- 1 root     root 0 Feb 22 11:40 tasks
+ls -l /sys/fs/cgroup/cpuset/red
 ```
 
+2. Read the default values of `cpu.shares` and `cpuset.cpus` tunables
 ```
-sudo cgdelete -g cpu,cpuset:blue
-sudo cgdelete -g cpu,cpuset:read
+cat /sys/fs/cgroup/cpu/red/cpu.shares
+cat /sys/fs/cgroup/cpu/red/cpuset.cpus
+
+cat /sys/fs/cgroup/cpu/blue/cpu.shares
+cat /sys/fs/cgroup/cpu/blue/cpuset.cpus
 ```
 
-```
-[nanastop@nanastop-vm:~ ->1]$ cat /sys/fs/cgroup/cpu/red/cpu.shares 
-1024
-[nanastop@nanastop-vm:~ ->0]$ cat /sys/fs/cgroup/cpu/blue/cpu.shares 
-1024
-```
+3. Modify both cgroups, so that they assign __CPU 0 only__ (and mem 0) to tasks of these groups
 
 ```
-echo 10000000 > /sys/fs/cgroup/memory/red/memory.kmem.limit_in_bytes
+echo 0 > /sys/fs/cgroup/cpuset/red/cpuset.cpus 
+echo 0 > /sys/fs/cgroup/cpuset/red/cpuset.mems 
+
+echo 0 > /sys/fs/cgroup/cpuset/blue/cpuset.cpus
+echo 0 > /sys/fs/cgroup/cpuset/blue/cpuset.mems 
 ```
 
-```
-[nanastop@nanastop-vm:~ ->0]$ echo 0 > /sys/fs/cgroup/cpuset/red/cpuset.cpus 
-[nanastop@nanastop-vm:~ ->0]$ echo 0 > /sys/fs/cgroup/cpuset/red/cpuset.mems 
-[nanastop@nanastop-vm:~ ->0]$ echo 0 > /sys/fs/cgroup/cpuset/blue/cpuset.mems 
-[nanastop@nanastop-vm:~ ->0]$ echo 0 > /sys/fs/cgroup/cpuset/blue/cpuset.cpus
-```
+
+4. Launch two CPU intensive processes
 
 ```
 dd if=/dev/zero of=/dev/null &
 dd if=/dev/zero of=/dev/null &
 ```
 
+and get their PIDs
 ```
 ps aux|grep dd
 ```
 
+
+5. Move each process to its own cgroup 
 ```
-sudo cgclassify -g cpu,cpuset:red 5045
-sudo cgclassify -g cpu,cpuset:blue 5092
+sudo cgclassify -g cpu,cpuset:red <PID1>
+sudo cgclassify -g cpu,cpuset:blue <PID2>
 ```
 
+and inspect their CPU usage
+```
+top
+```
+
+6. Change their CPU shares so that PID1 gets 75% of CPU 0 time, and PID2 gets 25% of CPU 1 time
 
 ```
 echo 768 > /sys/fs/cgroup/cpu/red/cpu.shares 
 echo 256 > /sys/fs/cgroup/cpu/blue/cpu.shares 
 ```
+
+
+and inspect their CPU usage again
+```
+top
+```
+
+7. Stop processes and delete cgroups 
+
+```
+killall dd 
+sudo cgdelete -g cpu,cpuset:blue -g cpu,cpuset:red
+```
+
+
+
+
+
+
+
+
+
+
+
 
