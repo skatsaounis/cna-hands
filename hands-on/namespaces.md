@@ -7,12 +7,12 @@
 
 2. Inspect processes from inside: 
   ```
-  ps aux
+  top
   ```
   
   Inspect processes from outside (host console):
   ```
-  pstree -p | grep unshare
+  pstree -p | grep top
   ```
   
 3. Inspect networks from inside: 
