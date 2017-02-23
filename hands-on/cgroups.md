@@ -1,10 +1,10 @@
 # Cgroups
 
 1. Create two control groups, a "red" and a "blue", making all the tunables of the 
-   `cpu`,`cpuset` controllers writable by nanastop
+   `cpu`,`cpuset` controllers writable by current user
     ```
-    sudo cgcreate -a nanastop -g cpu,cpuset:red
-    sudo cgcreate -a nanastop -g cpu,cpuset:blue
+    sudo cgcreate -a $USER -g cpu,cpuset:red
+    sudo cgcreate -a $USER -g cpu,cpuset:blue
     ```
     
    Inspect the tunables:
