@@ -103,7 +103,7 @@ changes randomly every few seconds.
 1. Run client on baremetal. Replace `$IP_ADDR` with our IP.  
 
    ```
-   go run code/client/main.go $IP_ADDR
+   go run client/main.go $IP_ADDR
    ```
 2. Observe: only 2 instances can't handle all the requests the client sends
 3. Observe: `server1` handles about half the requests
