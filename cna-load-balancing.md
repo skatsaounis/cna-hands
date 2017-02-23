@@ -52,7 +52,7 @@ enp0s3 ...
 
 Now off to deploy Gorb
 
-1. Create a new service. Replace `$IP_ADDR` with your IP address
+1. Create a new service. Replace `$IP_ADDR` with the IP address bound to enp0s3
    ```
    curl -i -X PUT \
         -H "Content-Type: application/json" \
@@ -64,7 +64,7 @@ Now off to deploy Gorb
    curl -i -X PUT \
         -H "Content-Type: application/json" \
         -d '{"host":"172.17.0.2", "port":4444, "method":"nat", "weight":100 }' \
-        http://localhost:4672/service/0/0
+        http://$IP_ADDR:4672/service/0/0
    ```
 3. Modify the previous command to register `server2` 
    (Hint: change `service/0/0` to `service/0/1`)
