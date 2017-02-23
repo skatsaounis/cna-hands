@@ -31,12 +31,12 @@ backends.
 In the previous hands on section we created 2 server containers
 
 ```
-$ docker inspect server1
+docker inspect server1
             ...
             "IPAddress": "172.17.0.2"
             ...
 
-$ docker inspect server2
+docker inspect server2
             ...
             "IPAddress": "172.17.0.3"
             ...
