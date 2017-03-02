@@ -39,7 +39,7 @@ Using it, we will spawn a new program inside one or more new namespaces, which a
   
 1. Now, run `bash` inside a new PID __and__ NET namespace. 
   ```
-  sudo unshare --fork --pid --net --mount-proc bash
+  sudo unshare --fork --pid --net --mount-proc /bin/bash
   ```
   
 2. Inspect network interfaces from inside: 
