@@ -37,12 +37,12 @@ Using it, we will spawn a new program inside one or more new namespaces, which a
 
 ## NET namespace
   
-1. Create a new PID and NET namespace and run bash again
+1. Now, run `bash` inside a new PID __and__ NET namespace. 
   ```
   sudo unshare --fork --pid --net --mount-proc bash
   ```
   
-2. Inspect networks from inside: 
+2. Inspect network interfaces from inside: 
   ```
   ip a
   ```
