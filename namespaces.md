@@ -44,7 +44,7 @@ Using it, we will spawn a new program inside one or more new namespaces, which a
   
 2. Inspect network interfaces from inside: 
   ```
-  ip a
+  ip link
   ```
   What do you observe?
   
