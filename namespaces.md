@@ -20,7 +20,7 @@ Using it, we will spawn a new program inside one or more new namespaces, which a
   
   Inspect processes from outside (host console):
   ```
-  pstree -p | grep top
+  pgrep -xa top
   ```
   What do you observe?
   
