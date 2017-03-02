@@ -48,3 +48,18 @@ Using it, we will spawn a new program inside one or more new namespaces, which a
   ```
   What do you observe?
   
+3. Exit 
+   ```
+   exit
+   ```
+   
+## What happens under the hood?
+
+Let's trace the system calls executed from the last case:
+
+```
+sudo strace unshare --fork --pid --net --mount-proc /bin/bash
+```
+
+What system calls do you observe near the end of the trace output?
+  
