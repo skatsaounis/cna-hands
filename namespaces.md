@@ -8,7 +8,7 @@ Using it, we will spawn a new program inside one or more new namespaces, which a
 
 ## PID namespace
 
-1. Create a new PID namespace and run bash in it
+1. Run `bash` into a new PID namespace
   ```
   sudo unshare --fork --pid --mount-proc /bin/bash
   ```
