@@ -8,7 +8,7 @@ In particular, you will learn how to:
 - pin a process into a subset of CPUs to run on
 - adjust the proportion of CPU cycles that a process gets over another
 
-1. At first, inspect the tunable parameters of the `cpu` and `cpuset` groups. 
+1. At first, inspect the contents of the `cpu` and `cpuset` groups. 
     ```
     ls /sys/fs/cgroup/cpu/
     ls /sys/fs/cgroup/cpuset/
@@ -16,7 +16,11 @@ In particular, you will learn how to:
     
     These are the "root" groups for `cpu` and `cpuset` subsystems, meaning that
     every process initially belongs there, since no special adjustments have been yet made 
-    to the resource allocation of any process.  
+    to the resource allocation of any process. The processes belonging to a cgroup is 
+    registered in the `tasks` file: 
+    ```
+    cat /sys/fs/cgroup/cpu/tasks
+    ```
     
     Under the `cpu` subsystem, you can see a number of tunable parameters, like `cpu.shares`.
     `cpu.shares` specifies a relative share of CPU time available to the tasks in a cgroup. 
