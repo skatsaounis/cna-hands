@@ -97,7 +97,8 @@ In particular, you will learn how to:
     ```
 
 1. Change their CPU shares so that the process in the "realtime" group gets 75% of CPU 0 
-   time, while the process in the "batch" group gets 25% of CPU 0 time:
+   time, while the process in the "batch" group gets 25% of CPU 0 time. Use 1024 as the "baseline"
+   value of CPU time, i.e. 100%:
     ```
     echo ??? > /sys/fs/cgroup/cpu/realtime/cpu.shares 
     echo ??? > /sys/fs/cgroup/cpu/batch/cpu.shares 
