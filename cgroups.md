@@ -77,7 +77,7 @@ In particular, you will learn how to:
 
   and get their PIDs
     ```
-    ps aux|grep dd
+    pgrep -x dd
     ```
 
 1. Move each process to a separate cgroup 
