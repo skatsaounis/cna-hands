@@ -87,8 +87,10 @@ In particular, you will learn how to:
 
 1. Move each process to a separate cgroup 
     ```
-    sudo cgclassify -g cpu,cpuset:realtime <PID1>
-    sudo cgclassify -g cpu,cpuset:batch <PID2>
+    echo <PID1> > /sys/fs/cgroup/cpu/realtime/tasks
+    echo <PID1> > /sys/fs/cgroup/cpuset/realtime/tasks
+    echo <PID2> > /sys/fs/cgroup/cpu/batch/tasks
+    echo <PID2> > /sys/fs/cgroup/cpuset/batch/tasks
     ```
 
     What is their CPU usage? 
