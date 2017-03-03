@@ -96,10 +96,11 @@ In particular, you will learn how to:
     top
     ```
 
-1. Change their CPU shares so that PID1 gets 75% of CPU 0 time, and PID2 gets 25% of CPU 0 time
+1. Change their CPU shares so that the process in the "realtime" group gets 75% of CPU 0 
+   time, while the process in the "batch" group gets 25% of CPU 0 time:
     ```
-    echo ??? > /sys/fs/cgroup/cpu/red/cpu.shares 
-    echo ??? > /sys/fs/cgroup/cpu/blue/cpu.shares 
+    echo ??? > /sys/fs/cgroup/cpu/realtime/cpu.shares 
+    echo ??? > /sys/fs/cgroup/cpu/batch/cpu.shares 
     ```
     
     What is their CPU usage now?
