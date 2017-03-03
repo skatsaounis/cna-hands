@@ -1,4 +1,4 @@
-# The Docker container Runtime: Hands on
+# The Docker container engine: Hands on
 
 - First clone the `cna-code` repo from github
 
