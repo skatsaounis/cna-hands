@@ -98,6 +98,7 @@ In particular, you will learn how to:
 
 1. Change their CPU shares so that the process in the "realtime" group gets 75% of CPU 0 
    time, while the process in the "batch" group gets 25% of CPU 0 time. 
+   
    NOTE: it is the relative weights of `cpu.shares` that matter, not their absolute values. 
     ```
     echo ??? > /sys/fs/cgroup/cpu/realtime/cpu.shares 
