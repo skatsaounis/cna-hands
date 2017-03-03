@@ -23,7 +23,7 @@ backends.
 3. Run Gorb inside Docker  
 
    ```
-   docker run --rm --name gorb --privileged --net=host -it kobolog/gorb -f -i enp0s3
+   docker run --rm --name gorb --privileged --net=host -it kobolog/gorb -f -i eth0
    ```
 
 ## Part (2/3): Register services to the load balancer
@@ -44,18 +44,18 @@ docker inspect server2
 
 We'll use these containers as a backend for our load balancer.
 
-We also need to get the IP address of `enp0s3` interface. 
+We also need to get the IP address of `eth0` interface. 
 Here `IP_ADDR=10.0.2.15`  
 ```
-ifconfig enp0s3
-enp0s3 ...
+ifconfig eth0
+eth0 ...
     inet addr:10.0.2.15  Bcast:10.0.2.255  Mask:255.255.255.0
     ...
 ```
 
 Now off to deploy Gorb
 
-1. Create a new service. Replace `$IP_ADDR` with the IP address bound to enp0s3  
+1. Create a new service. Replace `$IP_ADDR` with the IP address bound to eth0  
 
    ```
    curl -i -X PUT \
