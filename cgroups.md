@@ -55,10 +55,10 @@ In particular, you will learn how to:
    tunables should be the same as the root's. Verify it:
     ```
     cat /sys/fs/cgroup/cpu/realtime/cpu.shares
-    cat /sys/fs/cgroup/cpu/realtime/cpuset.cpus
+    cat /sys/fs/cgroup/cpuset/realtime/cpuset.cpus
 
     cat /sys/fs/cgroup/cpu/batch/cpu.shares
-    cat /sys/fs/cgroup/cpu/batch/cpuset.cpus
+    cat /sys/fs/cgroup/cpuset/batch/cpuset.cpus
     ```
 
 1. Modify both cgroups under the `cpuset` subsystem, so that tasks belonging to both of them 
@@ -120,5 +120,5 @@ In particular, you will learn how to:
 
     ```
     killall dd 
-    sudo cgdelete -g cpu,cpuset:blue -g cpu,cpuset:red
+    sudo cgdelete -g cpu,cpuset:realtime -g cpu,cpuset:batch
     ```
