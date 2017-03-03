@@ -60,8 +60,8 @@ In particular, you will learn how to adjust the proportion of CPU cycles that a 
 
 1. Move each process to a separate cgroup 
     ```
-    sudo cgclassify -g cpu,cpuset:realtime <PID1>
-    sudo cgclassify -g cpu,cpuset:batch <PID2>
+    sudo cgclassify -g cpu:realtime <PID1>
+    sudo cgclassify -g cpu:batch <PID2>
     ```
 
     What is their CPU usage? 
@@ -82,14 +82,10 @@ In particular, you will learn how to adjust the proportion of CPU cycles that a 
     ```
     top
     ```
-    
-    NOTE: if you were running the processes on a multicore VM with 2+ CPUs _without having adjusted 
-    their allowed CPUs to CPU 0_, then you would see that both processes would get 100% of CPU time. 
-    Why is that?
-      
+         
 1. Stop processes and delete cgroups 
 
     ```
     killall dd 
-    sudo cgdelete -g cpu,cpuset:realtime -g cpu,cpuset:batch
+    sudo cgdelete -g cpu:realtime -g cpu,cpuset:batch
     ```
