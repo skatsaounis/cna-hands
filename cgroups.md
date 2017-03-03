@@ -66,7 +66,12 @@ In particular, you will learn how to:
     ```
     echo 0 > /sys/fs/cgroup/cpuset/realtime/cpuset.cpus 
     echo 0 > /sys/fs/cgroup/cpuset/batch/cpuset.cpus
+    echo 0 > /sys/fs/cgroup/cpuset/realtime/cpuset.mem 
+    echo 0 > /sys/fs/cgroup/cpuset/batch/cpuset.mem
     ```
+    
+    NOTE: the last 2 commands are mandatory for cpuset allocation to work correctly. They 
+    specify that the tasks of the cgroups should be also bound to memory node 0. 
 
 1. Launch two CPU intensive processes
 
