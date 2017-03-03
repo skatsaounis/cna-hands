@@ -5,39 +5,67 @@ resource allocation to processes.
 We will use the `cpu` and `cpuset` cgroups as the target resources. 
 
 In particular, you will learn how to:
-- confine a process into a subset of CPUs to run on
+- pin a process into a subset of CPUs to run on
 - adjust the proportion of CPU cycles that a process gets over another
 
-1. Create two control groups, a "red" and a "blue", making all the tunable parameters of the 
-   `cpu`,`cpuset` controllers writable by current user
+1. At first, inspect the tunable parameters of the `cpu` and `cpuset` groups. 
     ```
-    sudo cgcreate -a $USER -g cpu,cpuset:red
-    sudo cgcreate -a $USER -g cpu,cpuset:blue
+    ls /sys/fs/cgroup/cpu/
+    ls /sys/fs/cgroup/cpuset/
     ```
     
-   Inspect the tunable parameters of `cpu`:
+    These are the "root" groups for `cpu` and `cpuset` subsystems, meaning that
+    every process initially belongs there, since no special adjustments have been yet made 
+    to the resource allocation of any process.  
+    
+    Under the `cpu` subsystem, you can see a number of tunable parameters, like `cpu.shares`.
+    `cpu.shares` specifies a relative share of CPU time available to the tasks in a cgroup. 
+    
+    What is the current value of this parameter in the root group? 
     ```
-    ls -l /sys/fs/cgroup/cpu/red
-    ls -l /sys/fs/cgroup/cpuset/red
+    cat /sys/fs/cgroup/cpu/cpu.shares
+    ```
+    
+    Similarly, `cpuset.cpus` specifies the CPUs of the platform where processes belonging to 
+    the group are allowed to run. 
+    
+    Which are the CPUs that processes of the root group are allowed to run?
+    ```
+    cat /sys/fs/cgroup/cpuset/cpuset.cpus
     ```
 
-1. Read the default values of `cpu.shares` and `cpuset.cpus` tunables
+1. Create two control groups under the `cpu` and `cpuset` subsystems, a __"realtime"__ and a __"batch"__, 
+    making all the tunable parameters of the `cpu`,`cpuset` controllers writable by current user
     ```
-    cat /sys/fs/cgroup/cpu/red/cpu.shares
-    cat /sys/fs/cgroup/cpu/red/cpuset.cpus
-
-    cat /sys/fs/cgroup/cpu/blue/cpu.shares
-    cat /sys/fs/cgroup/cpu/blue/cpuset.cpus
+    sudo cgcreate -a $USER -g cpu,cpuset:realtime
+    sudo cgcreate -a $USER -g cpu,cpuset:batch
+    ```
+   
+   Notice that two new subdirs have been created under the root hierarchies:
+    ```
+    ls /sys/fs/cgroup/cpu/
+    ls /sys/fs/cgroup/cpuset/
     ```
 
-1. Modify both cgroups, so that they assign __CPU 0 only__ (and mem 0) to tasks of these groups
+   As no special adjustments have been yet made, the default values of `cpu.shares` and `cpuset.cpus` 
+   tunables should be the same as the root's. Verify it:
+    ```
+    cat /sys/fs/cgroup/cpu/realtime/cpu.shares
+    cat /sys/fs/cgroup/cpu/realtime/cpuset.cpus
+
+    cat /sys/fs/cgroup/cpu/batch/cpu.shares
+    cat /sys/fs/cgroup/cpu/batch/cpuset.cpus
+    ```
+
+1. Modify both cgroups under the `cpuset` subsystem, so that tasks belonging to both of them 
+   will run on __CPU 0 only__ . (NOTE: there aren't any tasks assigned to these groups yet)
   
     ```
-    echo 0 > /sys/fs/cgroup/cpuset/red/cpuset.cpus 
-    echo 0 > /sys/fs/cgroup/cpuset/red/cpuset.mems 
+    echo 0 > /sys/fs/cgroup/cpuset/realtime/cpuset.cpus 
+    echo 0 > /sys/fs/cgroup/cpuset/realtime/cpuset.mems 
 
-    echo 0 > /sys/fs/cgroup/cpuset/blue/cpuset.cpus
-    echo 0 > /sys/fs/cgroup/cpuset/blue/cpuset.mems 
+    echo 0 > /sys/fs/cgroup/cpuset/batch/cpuset.cpus
+    echo 0 > /sys/fs/cgroup/cpuset/batch/cpuset.mems 
     ```
 
 1. Launch two CPU intensive processes
@@ -52,28 +80,37 @@ In particular, you will learn how to:
     ps aux|grep dd
     ```
 
-1. Move each process to its own cgroup 
+1. Move each process to a separate cgroup 
     ```
-    sudo cgclassify -g cpu,cpuset:red <PID1>
-    sudo cgclassify -g cpu,cpuset:blue <PID2>
+    sudo cgclassify -g cpu,cpuset:realtime <PID1>
+    sudo cgclassify -g cpu,cpuset:batch <PID2>
     ```
 
     and inspect their CPU usage
     ```
     top
     ```
-    
-1. Change their CPU shares so that PID1 gets 75% of CPU 0 time, and PID2 gets 25% of CPU 1 time
-    ```
-    echo 768 > /sys/fs/cgroup/cpu/red/cpu.shares 
-    echo 256 > /sys/fs/cgroup/cpu/blue/cpu.shares 
-    ```
-    
-    and inspect their CPU usage again
+
+1. What is their CPU usage? 
     ```
     top
     ```
 
+1. Change their CPU shares so that PID1 gets 75% of CPU 0 time, and PID2 gets 25% of CPU 0 time
+    ```
+    echo ??? > /sys/fs/cgroup/cpu/red/cpu.shares 
+    echo ??? > /sys/fs/cgroup/cpu/blue/cpu.shares 
+    ```
+    
+    What is their CPU usage now?
+    ```
+    top
+    ```
+    
+    NOTE: if you were running the processes on a multicore VM with 2+ CPUs _without having adjusted 
+    their allowed CPUs to CPU 0_, then you would see that both processes would get 100% of CPU time. 
+    Why is that?
+      
 1. Stop processes and delete cgroups 
 
     ```
