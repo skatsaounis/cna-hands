@@ -91,12 +91,7 @@ In particular, you will learn how to:
     sudo cgclassify -g cpu,cpuset:batch <PID2>
     ```
 
-    and inspect their CPU usage
-    ```
-    top
-    ```
-
-1. What is their CPU usage? 
+    What is their CPU usage? 
     ```
     top
     ```
