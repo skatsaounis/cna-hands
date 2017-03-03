@@ -87,5 +87,5 @@ In particular, you will learn how to adjust the proportion of CPU cycles that a 
 
     ```
     killall dd 
-    sudo cgdelete -g cpu:realtime -g cpu,cpuset:batch
+    sudo cgdelete -g cpu:realtime -g cpu:batch
     ```
