@@ -51,8 +51,8 @@ In particular, you will learn how to:
     ls /sys/fs/cgroup/cpuset/
     ```
 
-   As no special adjustments have been yet made, the default values of `cpu.shares` and `cpuset.cpus` 
-   tunables should be the same as the root's. Verify it:
+   As no special adjustments have been yet made, the default values for `cpu.shares` should 
+   be those of the parent (i.e. "root"), while `cpuset.cpus` should be empty. Verify it:
     ```
     cat /sys/fs/cgroup/cpu/realtime/cpu.shares
     cat /sys/fs/cgroup/cpuset/realtime/cpuset.cpus
