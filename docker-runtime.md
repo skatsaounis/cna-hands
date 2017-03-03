@@ -1,10 +1,10 @@
 # The Docker container Runtime: Hands on
 
-- First clone the `cna-workshop-code` repo from github
+- First clone the `cna-code` repo from github
 
 ```
-git clone http://github.com/intracom-telecom-sdn/cna-workshop-code.git
-cd cna-workshop-code
+git clone http://github.com/intracom-telecom-sdn/cna-code.git
+cd cna-code
 ```
 
 The first component of our cloud native application is a basic HTTP server 
