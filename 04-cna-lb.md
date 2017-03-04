@@ -25,6 +25,8 @@ backends.
    ```
    docker run --rm --name gorb --privileged --net=host -it kobolog/gorb -f -i enp0s3
    ```
+   These command line options instruct IPVS to distribute incoming requests addressed to 
+   the IP address bound to `enp0s3`.
 
 ## Part (2/3): Register services to the load balancer
 
@@ -42,7 +44,7 @@ docker inspect server2
             ...
 ```
 
-We'll use these containers as a backend for our load balancer.
+We'll use these containers as the Real Servers for our load balancer.
 
 We also need to get the IP address of `enp0s3` interface. 
 Here `IP_ADDR=10.0.2.15`  
