@@ -102,10 +102,28 @@ CHECK: better remove the Go part here? (or mention it at the end, like:
 We provide the boilerplate code in Python. (if you feel confident, we also
 provide a Go boilerplate to work on)
 
-
 We'll give you ~20 minutes for the coding part. Implement the functions in
 `orchestrator/python/docker_utils.py`.
 
+CHECK: shouldn't they test them to spawn a new container from the Python REPL? 
+
+CHECK: docker_utils.py lacks context. I mean, we give them a file and tell them 
+to fill the blanks, but they have no idea what this file is about. That is, it is
+a module with utility functions for handling _cna-server_ containers, specifically. 
+
+CHECK: how are they supposed to find the "specs" of the container dicts, show 
+they can filter on the "Image" key? Is it somewhere documented or should they 
+do it interactively?
+
+CHECK: line 12 should be 
+```
+#  TODO: Keep only the containers booted with c['Image'] = config.SERVER_BASE_IMAGE
+```
+
+
+CHECK: we should add docstrings to every function they are supposed to work on
+e.g., what is a serverID and how it differs and a containerID? What's the type 
+of a containerID?
 
 ## Conclusions
 
