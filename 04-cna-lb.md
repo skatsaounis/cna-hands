@@ -57,7 +57,9 @@ enp0s3 ...
 
 Now off to deploy Gorb
 
-1. Create a new service. Replace `$IP_ADDR` with the IP address bound to enp0s3  
+1. At first, we should create a new virtual service that gorb should perform load balancing for. 
+
+   Replace `$IP_ADDR` with the IP address bound to enp0s3  
 
    ```
    curl -i -X PUT \
