@@ -78,13 +78,8 @@ Now off to deploy Gorb
         http://$IP_ADDR:4672/service/0/0
    ```
    
-   CHECK: if we used port translation, e.g. something like `-p 8888:4444`, then we would need to give `-d '{"host":"$IP_ADDR", "port":8888, ...`
-   
 3. Modify the previous command to register `server2` 
    (Hint: change `service/0/0` to `service/0/1`)
-   
-   CHECK: if we used port translation, e.g. something like `-p 8889:4444`, then we would need to give `-d '{"host":"$IP_ADDR", "port":8889, ...`. I have verified them and work. 
-   
    
 
 ## Part (3/3): Test load balancing
