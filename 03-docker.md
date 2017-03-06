@@ -65,7 +65,7 @@ This server exposes 2 REST endpoints
 7. Make `server1` do some work with CURL using the IPAddress from step 6 and port
    4444 (don't `/stop` the server)
 8. Make `server1` do some work with CURL using `localhost` and port `8000`
-9. Repeat steps 4-7 to create and test a new server instance named `server2`.
+9. Repeat steps 4-8 to create and test a new server instance named `server2`.
    Map to host port `8001`.
 10. Delete `server2` instance
    ```
