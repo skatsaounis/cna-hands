@@ -25,6 +25,8 @@ backends.
    ```
    docker run --rm --name gorb --privileged --net=host -it kobolog/gorb -f -i enp0s3
    ```
+   These command line options instruct IPVS to distribute incoming requests addressed to 
+   the IP address bound to `enp0s3`.
 
 ## Part (2/3): Register services to the load balancer
 
@@ -42,7 +44,7 @@ docker inspect server2
             ...
 ```
 
-We'll use these containers as a backend for our load balancer.
+We'll use these containers as the Real Servers for our load balancer.
 
 We also need to get the IP address of `enp0s3` interface. 
 Here `IP_ADDR=10.0.2.15`  
@@ -55,7 +57,11 @@ enp0s3 ...
 
 Now off to deploy Gorb
 
-1. Create a new service. Replace `$IP_ADDR` with the IP address bound to enp0s3  
+1. At first, we should create a new virtual service that gorb should perform load balancing for. 
+   The virtual service will have as Virtual IP the IP address bound to `enp0s3`, virtual port 4444, and protocol "tcp". 
+   Also, it will use Round-Robin distribution. 
+
+   Replace `$IP_ADDR` with the IP address bound to enp0s3  
 
    ```
    curl -i -X PUT \
@@ -71,9 +77,10 @@ Now off to deploy Gorb
         -d '{"host":"172.17.0.2", "port":4444, "method":"nat", "weight":100 }' \
         http://$IP_ADDR:4672/service/0/0
    ```
+   
 3. Modify the previous command to register `server2` 
    (Hint: change `service/0/0` to `service/0/1`)
-
+   
 
 ## Part (3/3): Test load balancing
 
@@ -85,7 +92,7 @@ and IP_VS will route the packets to an instance, so that each instance handles
 a fair share of the traffic.
 
 #### Test Manually
-1. Permorm multiple requests to the service (IP,port) (~10-15)  
+1. Perform multiple requests to the service (IP,port) (~10-15)  
 
    ```
    curl http://$IP_PORT:4444/doWork

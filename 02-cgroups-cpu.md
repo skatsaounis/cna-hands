@@ -73,6 +73,7 @@ In particular, you will learn how to adjust the proportion of CPU cycles that a 
    time, while the process in the "batch" group gets 25% of CPU 0 time. 
    
    NOTE: it is the relative weights of `cpu.shares` that matter, not their absolute values. 
+   HINT: use values larger than 10
     ```
     echo ??? > /sys/fs/cgroup/cpu/realtime/cpu.shares 
     echo ??? > /sys/fs/cgroup/cpu/batch/cpu.shares 
