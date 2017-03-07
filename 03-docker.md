@@ -21,11 +21,13 @@ This server exposes 2 REST endpoints
    ```
    go run server/main.go
    ```
+   
 2. Perform a GET request using CURL and observe the result
 
    ```
    curl -X GET http://localhost:4444/doWork
    ```
+   
 3. Try to run a second server on baremetal. You should get an error because the port the server
    is trying to bind is already in use. You can bypass this by making the user specify the port,
    but what about other resources? (config files, log files, system side effects)
@@ -41,33 +43,43 @@ This server exposes 2 REST endpoints
 1. Open `server/Dockerfile`. This file is a template for a docker image to
    deploy and run our server application.
 2. Build the server image with
+
    ```
    docker build -t cna-server:latest server/
    ```
+   
 3. Verify `cna-server` image exists with
+
    ```
    docker images
    ```
 4. Deploy a server instance container using `cna-server:latest` image.
    The `-p` argument maps the internal port of the container `4444` where
    the server is listening to port `8000` in the host
+   
    ```
    docker run -ti -p 8000:4444 --name server1 cna-server:latest
    ```
+   
 5. Verify container is up
+
    ```
    docker ps
    ```
+   
 6. Inspect `server1` container. Search for IPAddress field to get the server IP
+
    ```
    docker inspect server1
    ```
+   
 7. Make `server1` do some work with CURL using the IPAddress from step 6 and port
    4444 (don't `/stop` the server)
 8. Make `server1` do some work with CURL using `localhost` and port `8000`
 9. Repeat steps 4-8 to create and test a new server instance named `server2`.
    Map to host port `8001`.
 10. Delete `server2` instance
+
    ```
    docker rm -f server2
    ```
