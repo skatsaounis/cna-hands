@@ -6,8 +6,8 @@ resource allocation to processes. We will use the `cpu` cgroup as the target res
 In particular, you will learn how to adjust the proportion of CPU cycles that a process gets over another.
 
 NOTE: the scenario below is valid if the platform you are working on has only 1 CPU. If your platform 
-has more than 1 CPUs, then you will need in addition to restrict the processes so that they run on 1 
-CPU only. In that case, please follow the instructions under `backup/cgroups.md`.
+has more than 1 CPUs, then you will need in addition to restrict the processes so that they are scheduled
+one the same CPU, e.g. CPU0. In that case, follow the instructions under `backup/cgroups.md`.
 
 
 1. At first, inspect the contents of the `cpu` group 
