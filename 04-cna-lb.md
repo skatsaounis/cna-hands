@@ -4,8 +4,13 @@ In this hands-on section we will introduce the second component of our cloud
 native application, Gorb load balancer.
 
 Gorb is an IPVS frontend with a REST API interface. You can use it to control 
-local IPVS instance in the Kernel to dynamically register virtual services and 
+a local IPVS instance in the Kernel to dynamically register virtual services and 
 backends.
+
+In this section, we will use Gorb in the following setup in order to load balance 
+requests towards the web server containers: 
+
+![Gorb](figs/gorb_setup.png)
 
 ## Part (1/3) Deploy Gorb load balancer
 
