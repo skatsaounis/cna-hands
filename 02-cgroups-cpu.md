@@ -5,9 +5,9 @@ resource allocation to processes. We will use the `cpu` cgroup as the target res
 
 In particular, you will learn how to adjust the proportion of CPU cycles that a process gets over another.
 
-NOTE: the scenario below is valid if the platform you are working on has only 1 CPU. If your platform 
+_NOTE: the scenario below is valid if the platform you are working on has only 1 CPU. If your platform 
 has more than 1 CPUs, then you will need in addition to restrict the processes so that they are scheduled
-one the same CPU, e.g. CPU0. In that case, follow the instructions under `backup/cgroups.md`.
+one the same CPU, e.g. CPU0. In that case, follow the instructions under `backup/cgroups.md`._
 
 
 1. At first, inspect the contents of the `cpu` group 
@@ -77,8 +77,9 @@ one the same CPU, e.g. CPU0. In that case, follow the instructions under `backup
 1. Change their CPU shares so that the process in the "realtime" group gets 75% of CPU 0 
    time, while the process in the "batch" group gets 25% of CPU 0 time. 
    
-   NOTE: it is the relative weights of `cpu.shares` that matter, not their absolute values. 
-   HINT: use values larger than 10
+   _NOTE: it is the relative weights of `cpu.shares` that matter, not their absolute values._
+   
+   _HINT: use values larger than 10_
     ```
     echo ??? > /sys/fs/cgroup/cpu/realtime/cpu.shares 
     echo ??? > /sys/fs/cgroup/cpu/batch/cpu.shares 
