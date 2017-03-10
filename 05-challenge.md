@@ -28,7 +28,7 @@ In this section we'll see how we can make use of these technologies to implement
 
 The first task is to provide an efficient implementation for the scale{Up,Down} functions defined in `orchestrator/python/main.py`. These functions take a number `n` and have to create / destroy `n` servers accordingly. We recommend to use a concurrent implementation for these functions (simplest done using `threading`).
 
-# Part 3: Orchestration algorithm
+## Part 3: Orchestration algorithm
 
 Now we have all the pieces in place to implement our orchestration logic. The function we need to implement is `serversNeededHeuristic`, which takes a set of metrics (like `{request,response}Rate`) and returns a number `n`, the number of servers needed to be created or destroyed. As the name suggests `n` is estimated heuristically, so there's no single optimal solution.
 
