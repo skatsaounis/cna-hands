@@ -18,9 +18,9 @@ In this section we'll see how we can make use of these technologies to implement
 | `cleanup.sh`                                     | Destroy leftover containers |
 | `run.sh`                                         | Run the CNA, the client and the orchestrator |
 
-## Part 1: Test `run.sh` and `cleanup.sh`
+## Part 1: Test `run.sh`
 
-- Inspect the code of these scripts
+- Inspect the code of `run.sh`
 - Run `run.sh`  
 - Run `cleanup.sh`   
 
