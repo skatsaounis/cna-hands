@@ -100,9 +100,10 @@ def unRegisterServerFromGorb(gorbIP, serviceID, serverIP):
     backendID = -1
     for bID in backends:
         backend = s.get('{0}/{1}/{2}'.format(gorbUrl, serviceID, bID))
-        if backend.json()['options']['host'] == serverIP:
-            backendID = bID
-            break
+        if 'options' in backend.json().keys():
+            if backend.json()['options']['host'] == serverIP:
+                backendID = bID
+                break
 
     if backendID == -1:
         print("Backend with {0} not found".format(serverIP))
