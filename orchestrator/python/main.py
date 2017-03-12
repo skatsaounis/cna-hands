@@ -29,10 +29,24 @@ def serversNeededHeuristic(
     needed < 0 : Destroy #needed servers
     '''
     needed = 0
+    if requestRate > responseRate:
+        needed += 1
+    elif requestRate < responseRate:
+        needed -= 1
+
     return needed
 
 
-def scaleUp(n, currentServerID):
+def serverUp(currentServerID, client):
+    serverIP = docker_utils.startServerContainer(client, currentServerID)
+    gorb.registerServerToGorb(config.GORB_IP,
+                              config.SERVICE_ID,
+                              currentServerID,
+                              serverIP,
+                              config.SERVICE_PORT)
+
+
+def scaleUp(n, currentServerID, client):
     '''
     ScaleUp boots #n servers starting from currentServerID
     The procedure to boot one server is:
@@ -43,10 +57,22 @@ def scaleUp(n, currentServerID):
     We recommend to boot the #n servers concurrently using
     the threading library
     '''
-    pass
+    for i in range(n):
+        t = threading.Thread(target=serverUp, args=(i + currentServerID + 1, client))
+        t.start()
 
 
-def scaleDown(n, nextServerID):
+def serverDown(currentServerID, client):
+    serverName = '/server-{0}'.format(currentServerID)
+    containers = docker_utils.serverList(client)
+    container = next(c for c in containers if c['Names'][0] == serverName)
+    serverIP = docker_utils.extractContainerIP(container)
+
+    docker_utils.removeServerContainer(client, currentServerID)
+    gorb.unRegisterServerFromGorb(config.GORB_IP, config.SERVICE_ID, serverIP)
+
+
+def scaleDown(n, nextServerID, client):
     '''
     ScaleDown destroys #n servers starting from currentServerID
     The procedure to boot destroy a server is:
@@ -59,7 +85,9 @@ def scaleDown(n, nextServerID):
     We recommend to remove the #n servers concurrently using
     the threading library
     '''
-    pass
+    for i in range(n):
+        t = threading.Thread(target=serverDown, args=(currentServerID - i, client))
+        t.start()
 
 
 if __name__ == '__main__':
@@ -90,9 +118,9 @@ if __name__ == '__main__':
         print("Servers needed %s " % serversNeeded)
 
         if serversNeeded > 0:
-            scaleUp(abs(serversNeeded), currentServerID)
+            scaleUp(abs(serversNeeded), currentServerID, client)
         elif serversNeeded < 0:
-            scaleDown(abs(serversNeeded), currentServerID)
+            scaleDown(abs(serversNeeded), currentServerID, client)
         else:
             pass
 
