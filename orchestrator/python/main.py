@@ -63,7 +63,7 @@ def scaleDown(n, nextServerID):
 
 
 if __name__ == '__main__':
-    client = docker.from_env()  # This is your docker client
+    client = docker.from_env().api  # This is your docker client
     print("Got docker client {0}".format(client))
 
     # Assume gorb running and one server registered

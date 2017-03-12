@@ -1,5 +1,3 @@
-#!/usr/bin/env/bash
-
 set -xe
 
 unset http_proxy
