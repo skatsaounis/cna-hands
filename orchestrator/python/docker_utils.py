@@ -3,87 +3,56 @@ from __future__ import print_function
 import config
 
 
+# serverList -> List running servers
 def serverList(client, all=False):
-    '''
-    serverList -> List running servers. Equivalent to
-                  docker ps | grep $SERVER_BASE_IMAGE
-    HINT: https://docker-py.readthedocs.io/en/stable/api.html#low-level-api
-    '''
-    # INSERT CODE HERE
-    # HINT: User all=all kw argument in containers() function
-    servers = None  # Replace this with the server list
-    # TODO: Keep only the containers with c['Image'] = SERVER_BASE_IMAGE
-    # INSERT CODE HERE
+    containers = client.containers(all=all)
+    # Keep only the containers booted with SERVER_BASE_IMAGE
+    servers = [c
+               for c in containers
+               if c['Image'] == config.SERVER_BASE_IMAGE]
     return servers
 
 
+# startServerContainer -> Create and start a server container and return the IP
 def startServerContainer(client, serverID):
-    '''
-    startServerContainer -> Create & start a server container and return the IP
-    Creates and starts a server container
-    HINT: https://docker-py.readthedocs.io/en/stable/api.html#low-level-api
-    '''
-    # Create container configuration
     containerConfig = client.create_container_config(
-        config.SERVER_BASE_IMAGE, command=None)
+        config.SERVER_BASE_IMAGE, '')
     containerConfig['Tty'] = True
     containerConfig['AttachStdin'] = True
     containerConfig['AttachStderr'] = False
     containerConfig['AttachStdout'] = False
 
-    # TODO: Create container from given configuration
-    # HINT use name='server-{0}'.format(serverID) in
-    # create_container_from_config
-    # This id is an increasing number that we set externally
-    # and counts the number of booted servers
-    newContainer = None  # Change this to create a new container
-
+    newContainer = client.create_container_from_config(
+        containerConfig, name='server-{0}'.format(serverID))
     newContainerID = newContainer['Id']
     print('Created container with ID = ' + str(newContainerID))
-    # TODO: Start container with newContainerID
-
-    # INSERT CODE HERE
+    client.start(newContainerID)
 
     containers = serverList(client)
-
-    # TODO: Search containers for container with Id == newContainerID
-    newContainerJSON = None  # Replace this with the new container json
-    # INSERT CODE HERE
-
+    newContainerJSON = next(c for c in containers if c['Id'] == newContainerID)
     return extractContainerIP(newContainerJSON)
 
 
-def removeServerContainer(client, containerID):
-    '''
-    removeServerContainer -> kill container instance using the containerID
-    TODO: Remove container with containerID
-    HINT: https://docker-py.readthedocs.io/en/stable/api.html#low-level-api
-    HINT: Use force=True kwarg
-    '''
-    # INSERT CODE HERE
-    pass
+# removeServerContainer -> kill container instance using the serverID
+# managed by the orchestrator
+def removeServerContainer(client, serverID):
+    containerID = containerIDFromServerID(client, serverID)
+    client.remove_container(containerID, force=True)
 
 
-def containerFromServerID(client, serverID):
-    '''
-    ContainerFromServerID -> Get container with server ID
-    '''
+# ContainerIDFromServerID -> Convert server ID to container ID
+def containerIDFromServerID(client, serverID):
     serverName = '/server-{0}'.format(serverID)
     for server in serverList(client, all=True):
         if server['Names'][0] == serverName:
-            return server
+            return server['Id']
     return None
 
 
+# runningServerCount -> Get number of running servers
 def runningServerCount(client):
-    '''
-    runningServerCount -> Get number of running servers
-    '''
     return len(serverList(client))
 
 
 def extractContainerIP(containerJSON):
-    '''
-    Get the IP of a running container from the container json
-    '''
     return containerJSON['NetworkSettings']['Networks']['bridge']['IPAddress']
